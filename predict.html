@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Stock Predictor | TradeInsight</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="predict.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-chart-line logo-icon"></i>
+            <span class="logo-text">TradeInsight</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="index.html#features" class="nav-link">Features</a>
+            <a href="index.html#news" class="nav-link">News</a>
+            <a href="index.html#trading" class="nav-link">Markets</a>
+            <a href="#" class="nav-link">AI Prediction</a>
+        </div>
+    </nav>
+
+    <div class="prediction-container">
+        <h2 class="section-title">AI Stock Prediction Engine</h2>
+        
+        <div class="prediction-card">
+            <div class="dataset-info">
+                <div class="dataset-status" id="dataset-status">
+                    <div class="status-indicator status-disconnected"></div>
+                    <span>Dataset: Not Connected</span>
+                </div>
+                <p>Upload your own dataset or use our integrated financial data sources for AI predictions.</p>
+            </div>
+            
+            <div class="input-section">
+                <div class="input-group">
+                    <label class="input-label">Stock Symbol</label>
+                    <input type="text" class="symbol-input" id="stock-symbol" placeholder="Enter stock symbol (e.g., AAPL, MSFT)" value="AAPL">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Time Frame</label>
+                    <select class="prediction-period" id="prediction-period">
+                        <option value="7">7 Days</option>
+                        <option value="14">14 Days</option>
+                        <option value="30" selected>30 Days</option>
+                        <option value="60">60 Days</option>
+                        <option value="90">90 Days</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="input-group" style="margin-bottom: 2rem;">
+                <label class="input-label">Dataset Source</label>
+                <select class="dataset-select" id="dataset-source">
+                    <option value="yahoo">Yahoo Finance</option>
+                    <option value="alpha-vantage">Alpha Vantage</option>
+                    <option value="kaggle">Kaggle Dataset (Upload Required)</option>
+                    <option value="custom">Custom (CSV Upload) </option>
+                </select>
+            </div>
+            
+            <div class="file-upload" id="file-upload" style="display: none;">
+                <input type="file" id="csv-file" accept=".csv">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--primary);"></i>
+                <h3>Upload Dataset</h3>
+                <p class="upload-text">Drag and drop your CSV file here or click to browse</p>
+                <small>Supported format: CSV with Date, Open, High, Low, Close, Volume columns</small>
+            </div>
+            
+            <div class="predict-controls">
+                <button class="load-dataset-btn" id="load-dataset">
+                    <i class="fas fa-database"></i> Load Dataset
+                </button>
+                <button class="predict-btn" id="predict-now">
+                    <i class="fas fa-brain"></i> Generate Prediction
+                </button>
+            </div>
+            
+            <div class="chart-container">
+                <div class="loading" id="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="prediction-chart"></canvas>
+            </div>
+            
+            <div class="results-container" id="results-container">
+            </div>
+        </div>
+        
+        <div class="sentiment-analysis">
+            <h3 class="sentiment-title">
+                <i class="fas fa-comments"></i> Market Sentiment Analysis
+            </h3>
+            
+            <p style="color: #cbd5e1; line-height: 1.7;">
+                Our AI analyzes thousands of news articles, social media posts, and financial reports to determine market sentiment for this stock.
+            </p>
+            
+            <div class="sentiment-meter">
+                <div class="sentiment-fill" id="sentiment-fill"></div>
+            </div>
+            
+            <div class="meter-labels">
+                <span>Very Negative</span>
+                <span>Negative</span>
+                <span>Neutral</span>
+                <span>Positive</span>
+                <span>Very Positive</span>
+            </div>
+            
+            <div class="sentiment-sources">
+                <div class="source-card">
+                    <i class="fab fa-twitter source-icon"></i>
+                    <h3>Social Media</h3>
+                    <p id="social-sentiment" class="neutral">Analyzing...</p>
+                </div>
+                
+                <div class="source-card">
+                    <i class="fas fa-newspaper source-icon"></i>
+                    <h3>News Sentiment</h3>
+                    <p id="news-sentiment" class="neutral">Analyzing...</p>
+                </div>
+                
+                <div class="source-card">
+                    <i class="fas fa-chart-line source-icon"></i>
+                    <h3>Technical Analysis</h3>
+                    <p id="technical-sentiment" class="neutral">Analyzing...</p>
+                </div>
+                
+                <div class="source-card">
+                    <i class="fas fa-users source-icon"></i>
+                    <h3>Analyst Rating</h3>
+                    <p id="analyst-sentiment" class="neutral">Analyzing...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="model-info">
+            <h3 class="sentiment-title">
+                <i class="fas fa-cogs"></i> AI Model Information
+            </h3>
+            
+            <p style="color: #cbd5e1; line-height: 1.7; margin-bottom: 1.5rem;">
+                Our prediction engine uses advanced machine learning models trained on historical stock data, market indicators, and sentiment analysis to forecast future price movements.
+            </p>
+            
+            <div class="model-metrics">
+                <div class="metric-card">
+                    <h4>Model Type</h4>
+                    <div class="metric-value">LSTM + RF</div>
+                    <p>Long Short-Term Memory + Random Forest</p>
+                </div>
+                
+                <div class="metric-card">
+                    <h4>Training Data</h4>
+                    <div class="metric-value">5+ Years</div>
+                    <p>Historical market data</p>
+                </div>
+                
+                <div class="metric-card">
+                    <h4>Accuracy Rate</h4>
+                    <div class="metric-value" id="model-accuracy">87.3%</div>
+                    <p>On test dataset</p>
+                </div>
+                
+                <div class="metric-card">
+                    <h4>Last Updated</h4>
+                    <div class="metric-value" id="model-updated">Today</div>
+                    <p>Model retraining</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="copyright">
+            &copy; 2025 TradeInsight. All rights reserved. AI predictions are for educational purposes only and should not be considered as financial advice.
+        </div>
+    </footer>
+
+    <script src="predict.js"></script>
+</body>
+</html>
